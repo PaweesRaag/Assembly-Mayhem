@@ -162,7 +162,7 @@ Assembly-Mayhem/
 
 ## 🏫 Learning Source
 
-A major part of this progression comes from **pwn.college** and hands-on experimentation.
+A major part of this progression comes from **** and hands-on experimentation.
 
 But this repository isn't intended to be a copy of a course.
 
