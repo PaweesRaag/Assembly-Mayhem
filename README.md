@@ -25,8 +25,8 @@ The goal isn't to make a perfectly polished collection of code. The goal is to p
 - Arithmetic and data representation
 - Control flow and comparisons
 - Memory and addressing
-- Stack fundamentals
-- Function calls and the calling convention
+- Stack fundamentals and deliberate stack management
+- Function calls and register-based argument passing
 - Process entry and `argc` / `argv`
 - Linux system calls
 - Assembling, linking, and executing programs
@@ -96,6 +96,42 @@ At assembly level, it forces you to think about representation, registers, instr
 
 That's precisely why this stuff is fun.
 
+### From isolated instructions to an actual program
+
+A major milestone has been moving beyond tiny syscall experiments and starting to build complete programs with reusable routines.
+
+One example is a command-line calculator that combines:
+
+- `argc` / `argv` parsing
+- string-to-integer conversion with `atoi`
+- integer-to-string conversion with `itoa`
+- function calls and return flow
+- deliberate stack allocation for scratch/output space
+- arithmetic operations
+- bitwise operations such as XOR, OR, AND, and NOT
+- unary negation
+- Linux `write` and `exit` syscalls
+
+The interesting part isn't that it works. It's that the pieces now fit together into a small architecture:
+
+```text
+argv
+ ↓
+parse
+ ↓
+dispatch operator
+ ↓
+compute
+ ↓
+convert result
+ ↓
+write output
+ ↓
+exit
+```
+
+This is the stage where assembly starts feeling less like memorizing instructions and more like **engineering with the machine directly**.
+
 ---
 
 ## 🛠️ Workflow
@@ -130,6 +166,9 @@ If something crashes, that's usually even better.
 - [x] Work with program arguments and `argc` / `argv`
 - [x] Get comfortable reasoning about low-level arithmetic
 - [x] Assemble, execute, and debug my own programs
+- [x] Build a multi-operation calculator from scratch
+- [x] Reuse custom `atoi` / `itoa` routines inside a larger program
+- [x] Practice deliberate stack allocation for temporary buffers
 - [ ] Build stronger intuition for Linux processes and syscalls
 - [ ] Become comfortable reading compiler-generated assembly
 - [ ] Deepen stack and memory understanding
