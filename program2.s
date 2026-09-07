@@ -2,14 +2,12 @@
 .global _start
 
 _start:
-    ; Load the Linux exit syscall number.
-    ; syscall 60 = exit(int status)
+    # Linux x86-64: syscall 60 is exit(status)
     mov rax, 60
 
-    ; Load the value stored at memory address 0x123400
-    ; into RDI. For exit(), RDI is the status code.
+    # Load the 8-byte value stored at memory address 0x123400.
+    # RDI becomes the exit status passed to exit().
     mov rdi, [0x123400]
 
-    ; Terminate the process with the value from memory
-    ; as its exit status.
+    # Terminate the process using the value loaded from memory.
     syscall
