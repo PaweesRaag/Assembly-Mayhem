@@ -2,8 +2,8 @@
 .global _start
 
 _start:
-    # Load a value from the absolute address 0x8A708.
-    mov rdi, [0x8A708]
+    # Load a value from the absolute address 567800.
+    mov rdi, [567800]
 
     # Dereference the value just loaded and use the result
     # as the exit status.
