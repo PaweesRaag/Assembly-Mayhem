@@ -16,29 +16,29 @@
 ;   prog - A      ; unary negation
 ;   prog ~ A      ; bitwise NOT
 ;
-; Numbers are read as decimal strings with atoi(), and the
-; result is converted back to text with itoa() before write().
+; Numbers are parsed from decimal strings with atoi(). The result
+; is converted back to signed decimal text with itoa() and sent
+; to standard output using the Linux write syscall.
 ; ============================================================
 
 _start:
     ; argc is stored at [rsp].
-    ; argc == 3 means unary:  prog OP A
-    ; otherwise this program treats it as binary: prog A OP B
+    ; argc == 3 means unary form: prog OP A.
     mov rdi, [rsp]
     cmp rdi, 3
     je unary
 
 binary:
-    ; Convert argv[1] (left operand) from text to integer.
+    ; argv[1] -> left operand.
     mov rdi, [rsp+16]
     call atoi
-    mov rbx, rax                  ; save left operand
+    mov rbx, rax
 
-    ; Convert argv[3] (right operand) from text to integer.
+    ; argv[3] -> right operand.
     mov rdi, [rsp+32]
     call atoi
 
-    ; argv[2] is a pointer to the operator string.
+    ; argv[2] -> operator string.
     mov r11, [rsp+24]
 
     ; Dispatch based on the operator character.
@@ -64,19 +64,18 @@ binary:
     jmp end
 
 unary:
-    ; Unary form is: prog OP A
+    ; Unary form: prog OP A.
     ; argv[1] = operator, argv[2] = operand.
     mov r11, [rsp+16]
 
-    ; Convert argv[2] to an integer.
     mov rdi, [rsp+24]
     call atoi
 
-    ; '~' performs bitwise NOT.
+    ; Bitwise NOT.
     cmp byte ptr [r11], 0x7E      ; '~'
     je not_operation
 
-    ; '-' performs arithmetic negation.
+    ; Arithmetic negation.
     cmp byte ptr [r11], 0x2D      ; '-'
     je nega
 
@@ -84,35 +83,35 @@ unary:
     jmp end
 
 function:
-    ; Reserve scratch space for the decimal result.
+    ; Reserve scratch space for the decimal output.
     sub rsp, 128
-    mov rsi, rsp                  ; RSI = output buffer
-    mov rdi, rax                  ; RDI = integer to format
+    mov rsi, rsp
+    mov rdi, rax
     call itoa
 
     ; write(1, buffer, length)
-    mov rdx, rax                  ; number of bytes returned by itoa
-    mov rdi, 1                    ; stdout
-    mov rsi, rsp                  ; buffer
-    mov rax, 1                    ; SYS_write
+    mov rdx, rax
+    mov rdi, 1
+    mov rsi, rsp
+    mov rax, 1
     syscall
 
-    ; Successful exit: status 0.
+    ; Successful exit status = 0.
     xor rdi, rdi
 
 end:
     ; exit(status)
-    mov rax, 60                   ; SYS_exit
+    mov rax, 60
     syscall
 
 
 ; ============================================================
 ; atoi
-; Input : RDI = pointer to a decimal string
+; Input : RDI = pointer to signed decimal string
 ; Output: RAX = signed integer value
 ;
-; Supports an optional leading '-'. Parsing stops at the first
-; byte outside the ASCII digit range '0'..'9'.
+; Supports an optional leading '-'. Parsing stops when the next
+; byte is outside the ASCII range '0'..'9'.
 ; ============================================================
 atoi:
     xor rax, rax                  ; accumulated value = 0
@@ -122,31 +121,30 @@ atoi:
     cmp byte ptr [rdi], 0x2D      ; '-'
     jne atoi_loop
 
-    mov r8d, 1                    ; mark as negative
+    mov r8d, 1                    ; mark number as negative
     inc rdi                       ; skip '-'
 
 atoi_loop:
-    ; Load the current character as an unsigned byte.
+    ; Load the current ASCII character.
     movzx ecx, byte ptr [rdi]
 
-    ; Stop if character is below '0'.
+    ; Accept only '0'..'9'.
     cmp ecx, 0x30
     jb atoi_done
 
-    ; Stop if character is above '9'.
     cmp ecx, 0x39
     ja atoi_done
 
     ; value = value * 10 + digit
     imul rax, rax, 10
-    sub ecx, 0x30                 ; ASCII digit -> numeric digit
+    sub ecx, 0x30                 ; ASCII -> numeric digit
     add rax, rcx
 
     inc rdi
     jmp atoi_loop
 
 atoi_done:
-    ; Apply the sign if a leading '-' was present.
+    ; Apply the sign if required.
     cmp r8d, 1
     jne atoi_return
 
@@ -162,9 +160,9 @@ atoi_return:
 ;         RSI = destination buffer
 ; Output: RAX = number of bytes written
 ;
-; Uses the stack to reverse the digits, because repeated division
-; by 10 produces digits from least-significant to most-significant.
-; Supports negative values and zero.
+; Decimal digits are produced from least-significant to most-
+; significant. They are temporarily pushed onto the stack and
+; then popped to write them in the correct order.
 ; ============================================================
 itoa:
     ; RBX is callee-saved, so preserve it.
@@ -174,53 +172,52 @@ itoa:
     cmp rdi, 0
     je itoa_zero
 
-    ; Negative numbers get a leading '-'.
+    ; Handle negative values separately.
     cmp rdi, 0
     jl itoa_negative
 
-    ; Positive number.
+    ; Positive value.
     xor rbx, rbx                  ; digit count = 0
     xor r9d, r9d                  ; negative flag = 0
-    mov rax, rdi                  ; working value
+    mov rax, rdi
     mov rcx, 10
     jmp itoa_extract
 
 itoa_negative:
-    mov r9d, 1                    ; remember that '-' is needed
+    mov r9d, 1                    ; remember the '-' sign
 
-    ; Write '-' first and advance the buffer pointer.
+    ; Write the sign before the digits.
     mov byte ptr [rsi], 0x2D      ; '-'
     inc rsi
 
     ; Work with the positive magnitude.
     neg rdi
 
-    xor rbx, rbx                  ; digit count = 0
+    xor rbx, rbx
     mov rax, rdi
     mov rcx, 10
 
 itoa_extract:
-    ; Divide the remaining value by 10.
-    ; Quotient -> RAX, remainder -> RDX.
+    ; Divide by 10:
+    ;   RAX = quotient
+    ;   RDX = remainder (next decimal digit)
     xor rdx, rdx
     div rcx
 
-    ; Store the remainder (next decimal digit) on the stack.
+    ; Save the digit because extraction happens in reverse order.
     push rdx
     inc rbx
 
-    ; Continue until the quotient reaches zero.
     cmp rax, 0
     jne itoa_extract
 
-    ; Preserve the digit count while RBX is consumed by the write loop.
+    ; Preserve digit count while RBX is consumed by the write loop.
     mov r8, rbx
 
 itoa_write:
-    ; Digits were pushed in reverse order, so pop them to restore
-    ; the correct left-to-right decimal order.
+    ; Restore the digits from most-significant to least-significant.
     pop rax
-    add al, 0x30                  ; numeric digit -> ASCII
+    add al, 0x30                 ; numeric digit -> ASCII
 
     mov byte ptr [rsi], al
     inc rsi
@@ -228,23 +225,20 @@ itoa_write:
     dec rbx
     jnz itoa_write
 
-    ; Return the number of digits written.
     mov rax, r8
 
-    ; Add one byte to the length if a '-' was written.
+    ; Include '-' in the returned length for negative values.
     cmp r9d, 1
     jne itoa_finish
 
     add rax, 1
 
 itoa_finish:
-    ; Restore the caller's RBX.
     pop rbx
     ret
 
 itoa_zero:
-    ; Zero is represented by exactly one byte: '0'.
-    mov byte ptr [rsi], 0x30
+    mov byte ptr [rsi], 0x30     ; '0'
     mov rax, 1
 
     pop rbx
@@ -253,22 +247,22 @@ itoa_zero:
 
 ; ============================================================
 ; Binary operations
-; After the two atoi calls:
+; After atoi():
 ;   RBX = left operand
 ;   RAX = right operand
-; The result is left in RAX for the common output path.
+; Each handler leaves the final result in RAX.
 ; ============================================================
 add:
-    add rax, rbx                  ; right + left
+    add rax, rbx
     jmp function
 
 sub:
-    sub rbx, rax                  ; left - right
+    sub rbx, rax                 ; left - right
     mov rax, rbx
     jmp function
 
 mul:
-    imul rax, rbx                 ; left * right
+    imul rax, rbx
     jmp function
 
 xor_operation:
@@ -283,14 +277,15 @@ and_operation:
     and rax, rbx
     jmp function
 
+
 ; ============================================================
 ; Unary operations
-; RAX already contains the operand from atoi().
+; RAX already contains the operand returned by atoi().
 ; ============================================================
 not_operation:
-    not rax                       ; bitwise NOT
+    not rax                      ; bitwise NOT
     jmp function
 
 nega:
-    neg rax                       ; arithmetic negation
+    neg rax                      ; arithmetic negation
     jmp function
