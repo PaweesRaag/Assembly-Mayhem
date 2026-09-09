@@ -681,6 +681,13 @@ $rsi             second argument / buffer
 $rdx             third argument / byte count
 $rax             return value / syscall number
 ```
+
 ## Additional Resources
 
 - [pwn.college Assembly Crash Course / accompanying video](https://www.youtube.com/watch?v=r185fCzdw8Y&time_continue=114&source_ve_path=NzY3NTg&embeds_referring_euri=https%3A%2F%2Fpwn.college%2F) — Video companion for the low-level assembly material used alongside these exercises.
+- [GDB's documentation](https://sourceware.org/gdb/onlinedocs/gdb/index.html) — Official GDB documentation and reference manual.
+- [Tudor's GDB crash course](https://web.archive.org/web/20250101052732/https://users.umiacs.umd.edu/~tdumitra/courses/ENEE757/Fall15/misc/gdb_tutorial.html) — Practical introductory GDB crash course and command guide.
+- [GDB debugging full example](https://www.brendangregg.com/blog/2016-08-09/gdb-example-ncurses.html) — A detailed end-to-end GDB debugging example.
+- [pwndbg](https://pwndbg.re/stable/features/) — GDB extension with enhanced debugging and reverse-engineering features.
+- [GEF](https://hugsy.github.io/gef/commands/aliases/) — GDB Enhanced Features, another popular GDB extension and command reference.
+- [OpenSecurityTraining2: Debuggers 1012](https://ost2.fyi/Dbg1012) — Introductory GDB course from OpenSecurityTraining2.
