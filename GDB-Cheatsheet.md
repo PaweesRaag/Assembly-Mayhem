@@ -680,8 +680,7 @@ $rdi             first argument / syscall argument
 $rsi             second argument / buffer
 $rdx             third argument / byte count
 $rax             return value / syscall number
-
+```
 ## Additional Resources
 
 - [pwn.college Assembly Crash Course / accompanying video](https://www.youtube.com/watch?v=r185fCzdw8Y&time_continue=114&source_ve_path=NzY3NTg&embeds_referring_euri=https%3A%2F%2Fpwn.college%2F) — Video companion for the low-level assembly material used alongside these exercises.
-``
