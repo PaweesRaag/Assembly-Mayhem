@@ -4,6 +4,177 @@
 >
 > Goal: move from understanding individual assembly instructions to understanding an entire compiled program by tracking registers, stack variables, function calls, control flow, and data flow.
 
+<Details>
+   <summary>Raw Assembly Code </summary>
+    
+```Assembly 
+   0x00005743b4c33ab1 <+0>:     endbr64
+   0x00005743b4c33ab5 <+4>:     push   rbp
+   0x00005743b4c33ab6 <+5>:     mov    rbp,rsp
+   0x00005743b4c33ab9 <+8>:     sub    rsp,0x40
+   0x00005743b4c33abd <+12>:    mov    DWORD PTR [rbp-0x24],edi
+   0x00005743b4c33ac0 <+15>:    mov    QWORD PTR [rbp-0x30],rsi
+   0x00005743b4c33ac4 <+19>:    mov    QWORD PTR [rbp-0x38],rdx
+   0x00005743b4c33ac8 <+23>:    mov    rax,QWORD PTR fs:0x28
+   0x00005743b4c33ad1 <+32>:    mov    QWORD PTR [rbp-0x8],rax
+   0x00005743b4c33ad5 <+36>:    xor    eax,eax
+   0x00005743b4c33ad7 <+38>:    mov    rax,QWORD PTR [rip+0x2552]        # 0x5743b4c36030 <stdin@GLIBC_2.2.5>
+   0x00005743b4c33ade <+45>:    mov    ecx,0x0
+   0x00005743b4c33ae3 <+50>:    mov    edx,0x2
+   0x00005743b4c33ae8 <+55>:    mov    esi,0x0
+   0x00005743b4c33aed <+60>:    mov    rdi,rax
+   0x00005743b4c33af0 <+63>:    call   0x5743b4c33250 <setvbuf@plt>
+   0x00005743b4c33af5 <+68>:    mov    rax,QWORD PTR [rip+0x2524]        # 0x5743b4c36020 <stdout@GLIBC_2.2.5>
+   0x00005743b4c33afc <+75>:    mov    ecx,0x0
+   0x00005743b4c33b01 <+80>:    mov    edx,0x2
+   0x00005743b4c33b06 <+85>:    mov    esi,0x0
+   0x00005743b4c33b0b <+90>:    mov    rdi,rax
+   0x00005743b4c33b0e <+93>:    call   0x5743b4c33250 <setvbuf@plt>
+   0x00005743b4c33b13 <+98>:    lea    rax,[rip+0x6ba]        # 0x5743b4c341d4
+   0x00005743b4c33b1a <+105>:   mov    rdi,rax
+   0x00005743b4c33b1d <+108>:   call   0x5743b4c33190 <puts@plt>
+   0x00005743b4c33b22 <+113>:   mov    rax,QWORD PTR [rbp-0x30]
+   0x00005743b4c33b26 <+117>:   mov    rax,QWORD PTR [rax]
+   0x00005743b4c33b29 <+120>:   mov    rsi,rax
+   0x00005743b4c33b2c <+123>:   lea    rax,[rip+0x6a5]        # 0x5743b4c341d8
+   0x00005743b4c33b33 <+130>:   mov    rdi,rax
+   0x00005743b4c33b36 <+133>:   mov    eax,0x0
+   0x00005743b4c33b3b <+138>:   call   0x5743b4c331d0 <printf@plt>
+   0x00005743b4c33b40 <+143>:   lea    rax,[rip+0x68d]        # 0x5743b4c341d4
+   0x00005743b4c33b47 <+150>:   mov    rdi,rax
+   0x00005743b4c33b4a <+153>:   call   0x5743b4c33190 <puts@plt>
+   0x00005743b4c33b4f <+158>:   mov    edi,0xa
+   0x00005743b4c33b54 <+163>:   call   0x5743b4c33170 <putchar@plt>
+   0x00005743b4c33b59 <+168>:   lea    rax,[rip+0x690]        # 0x5743b4c341f0
+   0x00005743b4c33b60 <+175>:   mov    rdi,rax
+   0x00005743b4c33b63 <+178>:   call   0x5743b4c33190 <puts@plt>
+   0x00005743b4c33b68 <+183>:   lea    rax,[rip+0x6f9]        # 0x5743b4c34268
+   0x00005743b4c33b6f <+190>:   mov    rdi,rax
+   0x00005743b4c33b72 <+193>:   call   0x5743b4c33190 <puts@plt>
+   0x00005743b4c33b77 <+198>:   lea    rax,[rip+0x74a]        # 0x5743b4c342c8
+   0x00005743b4c33b7e <+205>:   mov    rdi,rax
+   0x00005743b4c33b81 <+208>:   call   0x5743b4c33190 <puts@plt>
+   0x00005743b4c33b86 <+213>:   lea    rax,[rip+0x7b3]        # 0x5743b4c34340
+   0x00005743b4c33b8d <+220>:   mov    rdi,rax
+   0x00005743b4c33b90 <+223>:   call   0x5743b4c33190 <puts@plt>
+   0x00005743b4c33b95 <+228>:   lea    rax,[rip+0x81c]        # 0x5743b4c343b8
+   0x00005743b4c33b9c <+235>:   mov    rdi,rax
+   0x00005743b4c33b9f <+238>:   call   0x5743b4c33190 <puts@plt>
+   0x00005743b4c33ba4 <+243>:   lea    rax,[rip+0x845]        # 0x5743b4c343f0
+   0x00005743b4c33bab <+250>:   mov    rdi,rax
+   0x00005743b4c33bae <+253>:   call   0x5743b4c33190 <puts@plt>
+   0x00005743b4c33bb3 <+258>:   lea    rax,[rip+0x8ae]        # 0x5743b4c34468
+   0x00005743b4c33bba <+265>:   mov    rdi,rax
+   0x00005743b4c33bbd <+268>:   call   0x5743b4c33190 <puts@plt>
+   0x00005743b4c33bc2 <+273>:   lea    rax,[rip+0x917]        # 0x5743b4c344e0
+   0x00005743b4c33bc9 <+280>:   mov    rdi,rax
+   0x00005743b4c33bcc <+283>:   call   0x5743b4c33190 <puts@plt>
+   0x00005743b4c33bd1 <+288>:   lea    rax,[rip+0x980]        # 0x5743b4c34558
+   0x00005743b4c33bd8 <+295>:   mov    rdi,rax
+   0x00005743b4c33bdb <+298>:   call   0x5743b4c33190 <puts@plt>
+   0x00005743b4c33be0 <+303>:   lea    rax,[rip+0x9e1]        # 0x5743b4c345c8
+   0x00005743b4c33be7 <+310>:   mov    rdi,rax
+   0x00005743b4c33bea <+313>:   call   0x5743b4c33190 <puts@plt>
+   0x00005743b4c33bef <+318>:   lea    rax,[rip+0xa4a]        # 0x5743b4c34640
+   0x00005743b4c33bf6 <+325>:   mov    rdi,rax
+   0x00005743b4c33bf9 <+328>:   call   0x5743b4c33190 <puts@plt>
+   0x00005743b4c33bfe <+333>:   lea    rax,[rip+0xab3]        # 0x5743b4c346b8
+   0x00005743b4c33c05 <+340>:   mov    rdi,rax
+   0x00005743b4c33c08 <+343>:   call   0x5743b4c33190 <puts@plt>
+   0x00005743b4c33c0d <+348>:   lea    rax,[rip+0xab4]        # 0x5743b4c346c8
+   0x00005743b4c33c14 <+355>:   mov    rdi,rax
+   0x00005743b4c33c17 <+358>:   call   0x5743b4c33190 <puts@plt>
+   0x00005743b4c33c1c <+363>:   lea    rax,[rip+0xb1d]        # 0x5743b4c34740
+   0x00005743b4c33c23 <+370>:   mov    rdi,rax
+   0x00005743b4c33c26 <+373>:   call   0x5743b4c33190 <puts@plt>
+   0x00005743b4c33c2b <+378>:   lea    rax,[rip+0xb86]        # 0x5743b4c347b8
+   0x00005743b4c33c32 <+385>:   mov    rdi,rax
+   0x00005743b4c33c35 <+388>:   call   0x5743b4c33190 <puts@plt>
+   0x00005743b4c33c3a <+393>:   lea    rax,[rip+0xbef]        # 0x5743b4c34830
+   0x00005743b4c33c41 <+400>:   mov    rdi,rax
+   0x00005743b4c33c44 <+403>:   call   0x5743b4c33190 <puts@plt>
+   0x00005743b4c33c49 <+408>:   lea    rax,[rip+0xc58]        # 0x5743b4c348a8
+   0x00005743b4c33c50 <+415>:   mov    rdi,rax
+   0x00005743b4c33c53 <+418>:   call   0x5743b4c33190 <puts@plt>
+   0x00005743b4c33c58 <+423>:   lea    rax,[rip+0xcc9]        # 0x5743b4c34928
+   0x00005743b4c33c5f <+430>:   mov    rdi,rax
+   0x00005743b4c33c62 <+433>:   call   0x5743b4c33190 <puts@plt>
+   0x00005743b4c33c67 <+438>:   lea    rax,[rip+0xcf2]        # 0x5743b4c34960
+   0x00005743b4c33c6e <+445>:   mov    rdi,rax
+   0x00005743b4c33c71 <+448>:   call   0x5743b4c33190 <puts@plt>
+   0x00005743b4c33c76 <+453>:   lea    rax,[rip+0xd5b]        # 0x5743b4c349d8
+   0x00005743b4c33c7d <+460>:   mov    rdi,rax
+   0x00005743b4c33c80 <+463>:   call   0x5743b4c33190 <puts@plt>
+   0x00005743b4c33c85 <+468>:   lea    rax,[rip+0xdcc]        # 0x5743b4c34a58
+   0x00005743b4c33c8c <+475>:   mov    rdi,rax
+   0x00005743b4c33c8f <+478>:   call   0x5743b4c33190 <puts@plt>
+   0x00005743b4c33c94 <+483>:   lea    rax,[rip+0xe31]        # 0x5743b4c34acc
+   0x00005743b4c33c9b <+490>:   mov    rdi,rax
+   0x00005743b4c33c9e <+493>:   call   0x5743b4c33190 <puts@plt>                                  syscall convention of read
+   0x00005743b4c33ca3 <+498>:   int3                                                              rdi= file descriptor ie 0
+=> 0x00005743b4c33ca4 <+499>:   nop                                                               rsi= address
+   0x00005743b4c33ca5 <+500>:   mov    DWORD PTR [rbp-0x1c],0x0                                   rdx= how many bytes to read
+   0x00005743b4c33cac <+507>:   jmp    0x5743b4c33d6e <main+701>
+   0x00005743b4c33cb1 <+512>:   mov    esi,0x0
+   0x00005743b4c33cb6 <+517>:   lea    rax,[rip+0xe1b]        # 0x5743b4c34ad8                    open returns fd in rax
+   0x00005743b4c33cbd <+524>:   mov    rdi,rax
+   0x00005743b4c33cc0 <+527>:   mov    eax,0x0
+   0x00005743b4c33cc5 <+532>:   call   0x5743b4c33260 <open@plt>
+   0x00005743b4c33cca <+537>:   mov    ecx,eax
+   0x00005743b4c33ccc <+539>:   lea    rax,[rbp-0x18]
+   0x00005743b4c33cd0 <+543>:   mov    edx,0x8
+   0x00005743b4c33cd5 <+548>:   mov    rsi,rax
+   0x00005743b4c33cd8 <+551>:   mov    edi,ecx
+   0x00005743b4c33cda <+553>:   call   0x5743b4c33210 <read@plt>
+   0x00005743b4c33cdf <+558>:   lea    rax,[rip+0xe02]        # 0x5743b4c34ae8
+   0x00005743b4c33ce6 <+565>:   mov    rdi,rax
+   0x00005743b4c33ce9 <+568>:   call   0x5743b4c33190 <puts@plt>
+   0x00005743b4c33cee <+573>:   lea    rax,[rip+0xe13]        # 0x5743b4c34b08
+   0x00005743b4c33cf5 <+580>:   mov    rdi,rax
+   0x00005743b4c33cf8 <+583>:   mov    eax,0x0
+   0x00005743b4c33cfd <+588>:   call   0x5743b4c331d0 <printf@plt>
+   0x00005743b4c33d02 <+593>:   lea    rax,[rbp-0x10]
+   0x00005743b4c33d06 <+597>:   mov    rsi,rax
+   0x00005743b4c33d09 <+600>:   lea    rax,[rip+0xe07]        # 0x5743b4c34b17
+   0x00005743b4c33d10 <+607>:   mov    rdi,rax
+   0x00005743b4c33d13 <+610>:   mov    eax,0x0
+   0x00005743b4c33d18 <+615>:   call   0x5743b4c33220 <__isoc23_scanf@plt>
+   0x00005743b4c33d1d <+620>:   mov    rax,QWORD PTR [rbp-0x10]
+   0x00005743b4c33d21 <+624>:   mov    rsi,rax
+   0x00005743b4c33d24 <+627>:   lea    rax,[rip+0xdf1]        # 0x5743b4c34b1c
+   0x00005743b4c33d2b <+634>:   mov    rdi,rax
+   0x00005743b4c33d2e <+637>:   mov    eax,0x0
+   0x00005743b4c33d33 <+642>:   call   0x5743b4c331d0 <printf@plt>
+   0x00005743b4c33d38 <+647>:   mov    rax,QWORD PTR [rbp-0x18]
+   0x00005743b4c33d3c <+651>:   mov    rsi,rax
+   0x00005743b4c33d3f <+654>:   lea    rax,[rip+0xde7]        # 0x5743b4c34b2d
+   0x00005743b4c33d46 <+661>:   mov    rdi,rax
+   0x00005743b4c33d49 <+664>:   mov    eax,0x0
+   0x00005743b4c33d4e <+669>:   call   0x5743b4c331d0 <printf@plt>
+   0x00005743b4c33d53 <+674>:   mov    rdx,QWORD PTR [rbp-0x10]
+   0x00005743b4c33d57 <+678>:   mov    rax,QWORD PTR [rbp-0x18]
+   0x00005743b4c33d5b <+682>:   cmp    rdx,rax
+   0x00005743b4c33d5e <+685>:   je     0x5743b4c33d6a <main+697>
+   0x00005743b4c33d60 <+687>:   mov    edi,0x1
+   0x00005743b4c33d65 <+692>:   call   0x5743b4c33280 <exit@plt>
+   0x00005743b4c33d6a <+697>:   add    DWORD PTR [rbp-0x1c],0x1
+   0x00005743b4c33d6e <+701>:   cmp    DWORD PTR [rbp-0x1c],0x3
+   0x00005743b4c33d72 <+705>:   jle    0x5743b4c33cb1 <main+512>
+   0x00005743b4c33d78 <+711>:   mov    eax,0x0
+   0x00005743b4c33d7d <+716>:   call   0x5743b4c33983 <win>
+   0x00005743b4c33d82 <+721>:   lea    rax,[rip+0xdc1]        # 0x5743b4c34b4a
+   0x00005743b4c33d89 <+728>:   mov    rdi,rax
+   0x00005743b4c33d8c <+731>:   call   0x5743b4c33190 <puts@plt>
+   0x00005743b4c33d91 <+736>:   mov    eax,0x0
+   0x00005743b4c33d96 <+741>:   mov    rdx,QWORD PTR [rbp-0x8]
+   0x00005743b4c33d9a <+745>:   sub    rdx,QWORD PTR fs:0x28
+   0x00005743b4c33da3 <+754>:   je     0x5743b4c33daa <main+761>
+   0x00005743b4c33da5 <+756>:   call   0x5743b4c331c0 <__stack_chk_fail@plt>
+   0x00005743b4c33daa <+761>:   leave
+   0x00005743b4c33dab <+762>:   ret
+   ```
+</Details>
+
 ---
 
 ## 1. The main problem: individual instructions vs. the whole program
