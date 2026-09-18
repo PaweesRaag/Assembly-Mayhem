@@ -45,6 +45,8 @@ The assembly progression is kept together at the repository root.
 - [Program 33](program33.s)
 - [Program 34](program34.s)
 - [Program 35](program35.s)
+- [Program 36](program36.s)
+- [Program 37](program37.s)
 
 ## Reading Assembly
 
