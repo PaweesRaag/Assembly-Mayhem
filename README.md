@@ -261,3 +261,8 @@ It's the evidence that I'm building it.
 <p align="center">
   <b>⚙️ Learn the instructions. Understand the system. Then break things responsibly. 💥</b>
 </p>
+
+
+## 10-Day Assembly Streak
+
+Daily uploads from the `solve*` learning set are being added sequentially as `program38.s` onward, with verbose educational comments.
