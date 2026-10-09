@@ -48,6 +48,21 @@ The assembly progression is kept together at the repository root.
 - [Program 36](program36.s)
 - [Program 37](program37.s)
 
+## Web Servers in x86-64
+
+- [Web Server 1](webServer1.s)
+- [Web Server 2](webServer2.s)
+- [Web Server 3](webServer3.s)
+- [Web Server 4](webServer4.s)
+- [Web Server 5](webServer5.s)
+- [Web Server 6](webServer6.s)
+- [Web Server 7](webServer7.s)
+- [Web Server 8](webServer8.s)
+- [Web Server 9](webServer9.s)
+- [Web Server 10](webServer10.s)
+- [Web Server 11](webServer11.s)
+- [Web Server 12](webServer12.s)
+
 ## Reading Assembly
 
 - [Understanding x86-64 Assembly](UnderstandingAssembly.md)
@@ -62,4 +77,4 @@ The assembly progression is kept together at the repository root.
 
 ## Assembly Codes
 
-> Additional challenge notes and reverse-engineering investigations will live here as they are added.
+> Additional challenge notes and reverse-engineering investigations will live here.
